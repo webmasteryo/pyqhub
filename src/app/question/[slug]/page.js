@@ -2,12 +2,16 @@ import { questions } from "@/lib/question";
 import { notFound } from "next/navigation";
 import QuestionQuiz from "../../../components/QuestionQuiz";
 import { getQuestionBySlug } from "@/lib/services/questionService";
+import { getNextQuestion } from "@/lib/services/questionService";
+import { getPreviousQuestion } from "@/lib/services/questionService";
 
 const QuestionPage = async ({ params }) => {
   console.log("PARAMS:", params);
   const { slug } = await params;
   // const question = questions.find((q) => q.slug === slug);
   const question = await getQuestionBySlug({ slug });
+  const nextQuestion = await getNextQuestion(question);
+  const prevQuestion = await getPreviousQuestion(question);
 
   if (!question) {
     notFound();
@@ -42,6 +46,8 @@ const QuestionPage = async ({ params }) => {
             options={question.options}
             answer={question.correctAnswer}
             explanation={question.explanation}
+            nextSlug={nextQuestion?.slug}
+            prevSlug={prevQuestion?.slug}
           />
         </section>
 

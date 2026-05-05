@@ -1,8 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
-export default function QuestionQuiz({ options, answer, explanation }) {
+export default function QuestionQuiz({
+  options,
+  answer,
+  explanation,
+  nextSlug,
+  prevSlug,
+}) {
   const [selected, setSelected] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [showResult, setshowResult] = useState(false);
@@ -41,7 +48,7 @@ export default function QuestionQuiz({ options, answer, explanation }) {
                 onClick={() => {
                   setSelected(option);
                   setshowResult(false);
-                  setShowExplanation;
+                  setShowExplanation(false);
                 }}
                 className={`w-full rounded-lg border p-3 text-left text-sm font-medium transition ${style}`}
               >
@@ -72,14 +79,39 @@ export default function QuestionQuiz({ options, answer, explanation }) {
         </div>
 
         {showResult && result && (
-          <div
-            className={`rounded-lg px-4 py-3 text-sm font-medium ${
-              result === "correct"
-                ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
-                : "bg-rose-50 text-rose-700 border border-rose-100"
-            }`}
-          >
-            {result === "correct" ? "🎉 Correct!" : "❌ Wrong answer."}
+          <div className="flex flex-col gap-3">
+            <div
+              className={`rounded-lg px-4 py-3 text-sm font-medium ${
+                result === "correct"
+                  ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
+                  : "bg-rose-50 text-rose-700 border border-rose-100"
+              }`}
+            >
+              {result === "correct" ? "🎉 Correct!" : "❌ Wrong answer."}
+            </div>
+            <div className="flex gap-3">
+              {prevSlug && (
+                <Link
+                  href={`/question/${prevSlug}`}
+                  className="rounded-lg border border-slate-300 bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200"
+                >
+                  ← Previous
+                </Link>
+              )}
+
+              {nextSlug ? (
+                <Link
+                  href={`/question/${nextSlug}`}
+                  className="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700"
+                >
+                  Next →
+                </Link>
+              ) : (
+                <span className="text-sm font-medium text-slate-500">
+                  Quiz Completed 🎉
+                </span>
+              )}
+            </div>
           </div>
         )}
 

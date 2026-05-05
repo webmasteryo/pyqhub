@@ -71,3 +71,15 @@ export async function getQuestionBySlug({ slug }) {
     throw error;
   }
 }
+
+export async function getNextQuestion(currentQuestion) {
+  return await Question.findOne({
+    _id: { $gt: currentQuestion._id },
+  }).sort({ _id: 1 });
+}
+
+export async function getPreviousQuestion(currentQuestion) {
+  return await Question.findOne({
+    _id: { $lt: currentQuestion._id },
+  }).sort({ _id: -1 });
+}
